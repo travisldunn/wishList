@@ -1,4 +1,4 @@
-// var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 // var xhr = new XMLHttpRequest();
 // var WishList = require('../../routes/data/WishList');
 // var wishFactory = 
@@ -18,18 +18,21 @@ var gblLock = 0;
 var gbl = null;
 
 var xhrMethod = function(method, url, callback) {
+	console.log('INSIDE XHR METHOD');
 	var xhr = new XMLHttpRequest();
 	xhr.open(method, url);
 
 	xhr.onreadystatechange = function () {
+		console.log('READY STATE CHANGE');
 		if(xhr.readyState === 4 && xhr.status < 400) {
 			console.log('Have a response');
 			callback(xhr.responseText);
 			gblLock = 0;
-		} else if (xhr.readyState === 4){
-			gblLock = 0;
-			console.log('ERROR: ' + xhr.status);
-		} else {
+		// } else if (xhr.readyState === 4){
+		// 	gblLock = 0;
+		// 	console.log('ERROR: ' + xhr.status);
+		} 
+		else {
 			console.log('State: ' + xhr.readyState + ' Status: ' +
 				xhr.status);
 		}
@@ -77,10 +80,12 @@ describe("View and Interact with WishLists", function() {
 
 describe("Making a Connection from Client to Server", function() {
 	it('establishes ajax to server routes', function() {
-		xhrMethod('GET', 'http://localhost:3000/ping/ping', CB);
+		xhrMethod('GET', 'http://localhost:8686/ping/ping', CB);
 		while (gblLock === 1) {
 			var timeToWait = 500;
-			setTimeout(function() {}, timeToWait);
+			setTimeout(function() {
+				console.log('timeout');
+			}, timeToWait);
 		}
 		expect(gbl).toBe('Pong');
 	});
