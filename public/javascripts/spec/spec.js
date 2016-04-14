@@ -24,10 +24,10 @@ var xhrMethod = function(method, url, callback) {
 
 	xhr.onreadystatechange = function () {
 		console.log('READY STATE CHANGE');
-		if(xhr.readyState === 4 && xhr.status < 400) {
+		if(xhr.readyState === 4) {
 			console.log('Have a response');
-			callback(xhr.responseText);
 			gblLock = 0;
+			callback(xhr.responseText);
 		// } else if (xhr.readyState === 4){
 		// 	gblLock = 0;
 		// 	console.log('ERROR: ' + xhr.status);
@@ -82,10 +82,9 @@ describe("Making a Connection from Client to Server", function() {
 	it('establishes ajax to server routes', function() {
 		xhrMethod('GET', 'http://localhost:8686/ping/ping', CB);
 		while (gblLock === 1) {
-			var timeToWait = 500;
-			setTimeout(function() {
-				console.log('timeout');
-			}, timeToWait);
+			var timeToWait = 5000;
+			setTimeout(function() {}, timeToWait);
+			// console.log('INSIDE LOCK GBLock = ' + gblLock);
 		}
 		expect(gbl).toBe('Pong');
 	});
