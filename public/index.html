@@ -3,71 +3,85 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
 <body>
-  <div ng-app="test" ng-controller="myCtrl">
-    <p>Create a new Wishlist:</p>
-    Name of Wish List
-    <input type="text" ng-model="name">
-    <br> Description:
-    <input type="text" ng-model="description">
-    <br>
-    <button ng-click="createWishList()"> Create Wishtlist</button>
-    <br>
-    <br>
-    <select size=5 ng-options="x as x.name for x in wishListArray" ng-model="selected">
-    </select>
-    WishList Info: {{wishilist1.name + "'s " + wishilist1.description}} item selected : {{selected}}
-  </div>
-  <script>
-    var app = angular.module('test', []);
-    app.controller('myCtrl', function($scope, $http) {
+    <div ng-app="test" ng-controller="myCtrl">
+        <p>Create a new Wishlist:</p>
+        Name of Wish List
+        <input type="text" ng-model="name">
+        <br> Description:
+        <input type="text" ng-model="description">
+        <br>
+        <button ng-click="createWishList()"> Create Wishtlist</button>
+        <br>
+        <br>
+        <select size=5 ng-options="x as x.name for x in wishListArray" ng-model="selected">
+        </select>
+        WishList Info: {{wishilist1.name + "'s " + wishilist1.description}} item selected : {{selected}}
+    </div>
+    <script>
+        var app = angular.module('test', []);
+        app.controller('myCtrl', function($scope, $http) {
 
-      function WishList(name, description) {
-        var self = this;
+            function WishList(name, description) {
+                var self = this;
 
-        self.name = name;
-        self.description = description;
-      }
+                self.name = name;
+                self.description = description;
+            }
 
-      $http.get(
-        '/db/find',
-        null, null
-      ).then(function successCallback(response) {
-        console.log('in success call back: ');
-        console.log(response);
-      }, function errorCallback(response) {
-        console.log('in error call back: ' + response);
-      });
+            $http.get(
+                '/db/find',
+                null, null
+            ).then(function successCallback(response) {
+                console.log('in success call back: ');
+                console.log(response);
+                if (response.status === 200) {
 
-      wishilist1 = new WishList("shelby", "partylist");
-      wishilist2 = new WishList("ryan", "stufflist");
-      wishilist3 = new WishList("adam", "funlist");
+                    $scope.wishListArray = [];
 
-      $scope.wishListArray = [wishilist1, wishilist2, wishilist3];
 
-      $scope.createWishList = function() {
-        $http.post(
-          '/db/insert',
-        { name: $scope.name, description : $scope.description}, null
-        ).then(function successCallback(response) {
-          console.log('in success call back: ');
-          console.log(response);
+                    for (var pos in response.data) {
+                        
+                        var obj = response.data[pos];
 
-          $scope.wishListArray.push(new WishList($scope.name, $scope.description));
-        }, function errorCallback(response) {
-          console.log('in error call back: ' + response);
+                        $scope.wishListArray.push(new WishList(obj.name, obj.description))
+
+                    }
+
+
+                }
+            }, function errorCallback(response) {
+                console.log('in error call back: ' + response);
+            });
+
+
+
+            $scope.createWishList = function() {
+                $http.post(
+                    '/db/insert', {
+                        name: $scope.name,
+                        description: $scope.description
+                    }, null
+                ).then(function successCallback(response) {
+                    console.log('in success call back: ');
+                    console.log(response);
+
+                    $scope.wishListArray.push(new WishList($scope.name, $scope.description));
+                }, function errorCallback(response) {
+                    console.log('in error call back: ' + response);
+                });
+
+
+
+            };
+
+
+
+
+
+
         });
 
-
-
-      };
-
-
-
-
-
-
-    });
-  </script>
+    </script>
 </body>
 
 </html>
