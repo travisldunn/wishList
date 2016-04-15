@@ -1,30 +1,38 @@
-function WishDAO () {
-  var mongoDB = require ('mongodb').MongoClient;
+function WishDAO() {
+  console.log('inside wish dao');
+    var mongoDB = require('mongodb').MongoClient;
 
-  var connection = {
-    url: 'mongodb://localhost:27017/wishList'
-  };
-  return({
-    getAllWishLists: function(){
-      mongoDB.connect(this.url, function(err, db) {
-      var curser = db.collection('practiceWishes').find();
-      var returnArray = [];
-      curser.each(function(err, doc) {
-        if(doc) {
-
+    var connection = {
+        url: 'mongodb://localhost:27017/wishList'
+    };
+    return ({
+        getAllWishLists: function(callback) {
+          console.log('inside get all wish lists');
+            mongoDB.connect(connection.url, function(err, db) {
+              if (err) {
+                console.log('inside connection err: '+err);
+              }
+              console.log('inside the connect');
+                var cursor = db.collection('practiceWishes').find();
+                cursor.toArray(function(err, result) {
+                    if (err) {
+                        console.log(err);
+                    } else if (result.length) {
+                        callback(result.slice());
+                    }
+                })
+            })
+        },
+        saveWishList: function(list,callback) {
+            mongoDB.connect(connection.url, function(err, db) {
+                if (err) {
+                  console.log('insert connection error: ' + err);
+                }
+                var insertReturn = db.collection('practiceWishes').insert(list);
+                callback(insertReturn);
+            })
         }
-      })
-        console.log('successful connection')
-      })
-    },
-    saveWishList: function(list) {
-      mongoDB.connect(this.url, function(err, db) {
-        console.log('successful connection')
-      })
-    }
-  });
+    });
 }
-
-
 
 module.exports = WishDAO;

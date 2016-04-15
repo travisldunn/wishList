@@ -1,21 +1,22 @@
 var express = require('express');
+var WishDAO = require('./helpers/wishdao');
 var router = express.Router();
-var mongoDB = require ('mongodb').MongoClient;
-
-var connection = {
-  url: 'mongodb://localhost:27017/wishList',
-  conn: function() {
-    mongoDB.connect(this.url, function(err, db) {
-      console.log('successful connection')
-    })
-  }
-};
-
-router.post('/insert', function(req, resp, next){
-  console.log('inside insert route inside item.js');
-  resp.send('pong');
+router.post('/insert', function(req, resp, next) {
+    console.log('inside insert route');
+    console.log(req.body);
+    console.log('request^');
+    WishDAO().saveWishList(req.body, function(obj) {
+        console.log(obj);
+        console.log('inside insert route inside item.js');
+        resp.send(obj);
+    });
 });
-
-
-
+router.get('/find', function(req, resp, next) {
+    console.log('inside find route');
+    WishDAO().getAllWishLists(function(obj) {
+        console.log(obj);
+        console.log('inside find route inside item.js');
+        resp.send(obj);
+    });
+});
 module.exports = router;

@@ -28,14 +28,16 @@
         self.description = description;
       }
 
-      $http.post(
-        '/db/insert',
+      $http.get(
+        '/db/find',
         null, null
       ).then(function successCallback(response) {
-        console.log('in success call back: ' + response);
+        console.log('in success call back: ');
+        console.log(response);
       }, function errorCallback(response) {
         console.log('in error call back: ' + response);
       });
+
       wishilist1 = new WishList("shelby", "partylist");
       wishilist2 = new WishList("ryan", "stufflist");
       wishilist3 = new WishList("adam", "funlist");
@@ -43,8 +45,18 @@
       $scope.wishListArray = [wishilist1, wishilist2, wishilist3];
 
       $scope.createWishList = function() {
+        $http.post(
+          '/db/insert',
+        { name: $scope.name, description : $scope.description}, null
+        ).then(function successCallback(response) {
+          console.log('in success call back: ');
+          console.log(response);
 
-        $scope.wishListArray.push(new WishList($scope.name, $scope.description));
+          $scope.wishListArray.push(new WishList($scope.name, $scope.description));
+        }, function errorCallback(response) {
+          console.log('in error call back: ' + response);
+        });
+
 
 
       };
