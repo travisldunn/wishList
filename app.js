@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var ping = require('./routes/ping');
 
+var item = require('./routes/item');
 var app = express();
 
 // view engine setup
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/ping', ping);
-
+app.use('/db', item);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
