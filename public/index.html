@@ -13,40 +13,12 @@
         <button ng-click="createWishList()"> Create Wishtlist</button>
         <br>
         <br>
-        <select size =5 ng-options="x as x.name for x in wishListArray" ng-model="selected">
+        <select size=5 ng-options="x as x.name for x in wishListArray" ng-model="selected">
         </select>
         WishList Info: {{wishilist1.name + "'s " + wishilist1.description}} item selected : {{selected}}
     </div>
-    <script>
-    var app = angular.module('test', []);
-    app.controller('myCtrl', function($scope) {
-
-        function WishList(name, description) {
-            var self = this;
-
-            self.name = name;
-            self.description = description;
-        }
-
-        wishilist1 = new WishList("shelby", "partylist");
-        wishilist2 = new WishList("ryan", "stufflist");
-        wishilist3 = new WishList("adam", "funlist");
-
-        $scope.wishListArray = [wishilist1, wishilist2, wishilist3];
-
-        $scope.createWishList = function() {
-
-            $scope.wishListArray.push(new WishList($scope.name, $scope.description));
-
-
-        };
-
-
-
-
-
-
-    });
+    <script src="./javascripts/fullWishList.js">
+        
     </script>
 </body>
 
